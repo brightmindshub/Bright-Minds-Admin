@@ -22,12 +22,12 @@ import {
   RefreshCw,
 } from "lucide-react";
 import Image from "next/image";
+import StudentDashboard from "./StudentDashboard";
 
 interface AdminAdmissionFormProps {
   onLogout: () => void;
 }
 
-// --- TYPES & CONSTANTS ---
 interface FormData {
   date: string;
   name: string;
@@ -82,7 +82,7 @@ const SOURCE_OPTIONS = [
 const PAYMENT_OPTIONS = ["Cash", "UPI", "Cheque"];
 
 const INITIAL_STATE: FormData = {
-  date: new Date().toISOString().split("T")[0],
+  date: new Date().toLocaleDateString("en-CA"),
   name: "",
   guardian: "",
   dob: "",
@@ -131,40 +131,15 @@ const CustomInput: React.FC<InputProps> = ({
 export default function AdminAdmissionForm({
   onLogout,
 }: AdminAdmissionFormProps) {
-  // Navigation State
   const [view, setView] = useState<"intake" | "dashboard">("intake");
 
-  // Form States
   const [step, setStep] = useState(1);
   const [form, setForm] = useState<FormData>(INITIAL_STATE);
   const [errors, setErrors] = useState<FormErrors>({});
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  // Dashboard States
-  const [students, setStudents] = useState<any[]>([]);
-  const [fetching, setFetching] = useState(false);
-
   const url = process.env.NEXT_PUBLIC_GOOGLE_SCRIPT_URL;
-
-  // Fetch Logic for Dashboard
-  const fetchDashboardData = async () => {
-    if (!url) return;
-    setFetching(true);
-    try {
-      const res = await fetch(url);
-      const data = await res.json();
-      setStudents(data);
-    } catch (err) {
-      console.error("Dashboard Fetch Error:", err);
-    } finally {
-      setFetching(false);
-    }
-  };
-
-  useEffect(() => {
-    if (view === "dashboard") fetchDashboardData();
-  }, [view]);
 
   const validateStep = (s: number) => {
     let newErrors: FormErrors = {};
@@ -233,7 +208,6 @@ export default function AdminAdmissionForm({
 
   return (
     <div className="h-screen w-full flex flex-col md:flex-row bg-[#f8fafc] overflow-hidden">
-      {/* SIDEBAR - Updated with 2 Options */}
       <aside className="hidden md:flex w-20 lg:w-72 bg-[#19125e] flex-col justify-between py-10 px-6 border-r border-white/5 relative z-50">
         <div className="w-full text-center">
           <Image
@@ -338,7 +312,6 @@ export default function AdminAdmissionForm({
               </header>
 
               <form onSubmit={handleFinalSubmit} className="max-w-5xl mx-auto">
-                {/* FULL SCREEN LOADING OVERLAY */}
                 <AnimatePresence>
                   {loading && (
                     <motion.div
@@ -571,7 +544,6 @@ export default function AdminAdmissionForm({
                   )}
                 </AnimatePresence>
 
-                {/* FIXED BOTTOM NAVIGATION PANE */}
                 <div className="fixed bottom-0 left-0 right-0 md:relative md:mt-12 bg-white/80 backdrop-blur-xl border-t border-gray-100 md:border-0 md:bg-transparent p-4 md:p-0 z-[60]">
                   <div className="max-w-5xl mx-auto flex items-center justify-between gap-4">
                     <button
@@ -617,104 +589,7 @@ export default function AdminAdmissionForm({
               </form>
             </motion.div>
           ) : (
-            /* --- DASHBOARD VIEW (TABULAR DATA) --- */
-            <motion.div
-              key="dashboard"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="p-5 md:p-12 lg:p-16 text-left"
-            >
-              <header className="flex justify-between items-center mb-10">
-                <div>
-                  <h1 className="text-3xl font-black text-[#19125e] uppercase italic tracking-tighter leading-none">
-                    Student Registry
-                  </h1>
-                  <p className="text-gray-400 text-[10px] font-bold uppercase tracking-widest mt-2">
-                    Live from Google Sheets
-                  </p>
-                </div>
-                <button
-                  onClick={fetchDashboardData}
-                  className="p-3 bg-white border border-gray-100 rounded-xl shadow-sm text-[#19125e] hover:bg-gray-50 active:scale-90 transition-all"
-                >
-                  <RefreshCw
-                    size={20}
-                    className={fetching ? "animate-spin" : ""}
-                  />
-                </button>
-              </header>
-
-              <div className="bg-white rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.02)] border border-gray-100 overflow-hidden">
-                <div className="overflow-x-auto">
-                  <table className="w-full border-collapse">
-                    <thead className="bg-gray-50/50 border-b border-gray-100">
-                      <tr>
-                        {["Date", "Name", "Course", "Contact", "Status"].map(
-                          (h) => (
-                            <th
-                              key={h}
-                              className="px-8 py-5 text-[10px] font-black text-[#19125e]/40 uppercase tracking-widest"
-                            >
-                              {h}
-                            </th>
-                          ),
-                        )}
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-50">
-                      {fetching ? (
-                        <tr>
-                          <td
-                            colSpan={5}
-                            className="py-20 text-center text-gray-400 font-bold uppercase tracking-widest animate-pulse italic"
-                          >
-                            Fetching database...
-                          </td>
-                        </tr>
-                      ) : students.length === 0 ? (
-                        <tr>
-                          <td
-                            colSpan={5}
-                            className="py-20 text-center text-gray-400 font-bold uppercase tracking-widest italic"
-                          >
-                            No records found
-                          </td>
-                        </tr>
-                      ) : (
-                        students.map((student, idx) => (
-                          <tr
-                            key={idx}
-                            className="hover:bg-gray-50/50 transition-colors"
-                          >
-                            <td className="px-8 py-5 text-xs font-bold text-gray-400">
-                              {student.date || "-"}
-                            </td>
-                            <td className="px-8 py-5 text-sm font-black text-[#19125e]">
-                              {student.name}
-                            </td>
-                            <td className="px-8 py-5">
-                              <span className="px-3 py-1 bg-[#19125e]/5 text-[#19125e] text-[10px] font-black rounded-lg uppercase">
-                                {student.course}
-                              </span>
-                            </td>
-                            <td className="px-8 py-5 text-sm font-bold text-gray-500">
-                              {student.phone}
-                            </td>
-                            <td className="px-8 py-5">
-                              <div className="flex items-center gap-2 text-green-500 font-black text-[10px] uppercase">
-                                <div className="w-1.5 h-1.5 bg-green-500 rounded-full" />{" "}
-                                Verified
-                              </div>
-                            </td>
-                          </tr>
-                        ))
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </motion.div>
+            <StudentDashboard url={url!} />
           )}
         </AnimatePresence>
       </main>
