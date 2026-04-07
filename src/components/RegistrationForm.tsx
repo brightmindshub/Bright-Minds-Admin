@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   User,
   Phone,
+  Mail,
   MapPin,
   GraduationCap,
   Briefcase,
@@ -35,6 +36,7 @@ interface FormData {
   dob: string;
   gender: string;
   phone: string;
+  email: string;
   address: string;
   qualification: string;
   occupation: string;
@@ -88,6 +90,7 @@ const INITIAL_STATE: FormData = {
   dob: "",
   gender: "",
   phone: "",
+  email: "",
   address: "",
   qualification: "",
   occupation: "",
@@ -147,6 +150,8 @@ export default function AdminAdmissionForm({
       if (!form.name.trim()) newErrors.name = "Required";
       if (!form.phone || !/^[6-9]\d{9}$/.test(form.phone))
         newErrors.phone = "Invalid Phone";
+      if (form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
+        newErrors.email = "Invalid Email Format";
     }
     if (s === 2 && !form.course) newErrors.course = "Select Course";
     setErrors(newErrors);
@@ -250,7 +255,6 @@ export default function AdminAdmissionForm({
         </button>
       </aside>
 
-      {/* MOBILE HEADER */}
       <div className="md:hidden bg-[#19125e] p-4 flex justify-between items-center relative z-50">
         <Image
           src="/brightMindsAcademy-logo.jpeg"
@@ -276,7 +280,6 @@ export default function AdminAdmissionForm({
         </div>
       </div>
 
-      {/* MAIN CONTENT AREA */}
       <main className="flex-1 overflow-y-auto pb-32 md:pb-12 scroll-smooth bg-[#f8fafc]">
         <AnimatePresence mode="wait">
           {view === "intake" ? (
@@ -340,7 +343,6 @@ export default function AdminAdmissionForm({
                   )}
                 </AnimatePresence>
 
-                {/* FORM STEPS - Your Existing Steps */}
                 <AnimatePresence mode="wait">
                   {step === 1 && (
                     <motion.div
@@ -409,12 +411,21 @@ export default function AdminAdmissionForm({
                           setForm={setForm}
                           error={errors.phone}
                         />
+                        <CustomInput
+                          label="Email Id"
+                          icon={Mail}
+                          name="email"
+                          type="email"
+                          formData={form}
+                          setForm={setForm}
+                          error={errors.email}
+                        />
                         <div className="space-y-1.5">
                           <label className="text-[10px] font-black uppercase tracking-widest text-[#19125e]/50 ml-1">
                             Full Address
                           </label>
                           <textarea
-                            className="w-full bg-gray-50 border border-gray-200 rounded-xl p-4 text-[#19125e] font-bold text-sm h-32 outline-none focus:border-[#19125e]"
+                            className="w-full bg-gray-50 border border-gray-200 rounded-xl p-4 text-[#19125e] font-bold text-sm h-24 outline-none focus:border-[#19125e]"
                             value={form.address}
                             onChange={(e) =>
                               setForm({ ...form, address: e.target.value })
@@ -523,22 +534,21 @@ export default function AdminAdmissionForm({
                         </div>
                       </div>
                       <div className="bg-[#19125e] p-8 rounded-[2.5rem] shadow-2xl hidden md:flex flex-col justify-center text-white text-center md:text-left relative overflow-hidden group">
-                        {" "}
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl group-hover:bg-white/10 transition-all duration-700" />{" "}
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl group-hover:bg-white/10 transition-all duration-700" />
                         <CheckCircle
                           className="text-[#f0c44c] mb-4 mx-auto md:mx-0 shadow-2xl shadow-[#f0c44c]/20"
                           size={32}
-                        />{" "}
+                        />
                         <p className="text-white/40 text-[9px] font-bold uppercase tracking-widest mt-2 relative z-10">
                           Verification Ready
-                        </p>{" "}
+                        </p>
                         <button
                           type="submit"
                           disabled={loading}
                           className="w-full bg-[#f0c44c] text-[#19125e] py-4 rounded-xl font-black text-[11px] uppercase tracking-[0.2em] mt-8 shadow-xl active:scale-95 transition-all relative z-10 cursor-pointer"
                         >
                           Submit
-                        </button>{" "}
+                        </button>
                       </div>
                     </motion.div>
                   )}
@@ -551,8 +561,8 @@ export default function AdminAdmissionForm({
                       onClick={() => step > 1 && setStep(step - 1)}
                       className={`flex-1 md:flex-none flex items-center justify-center gap-2 py-4 px-6 md:px-0 text-gray-400 font-black text-[10px] uppercase tracking-widest ${step === 1 ? "invisible" : "visible"} cursor-pointer`}
                     >
-                      <ArrowLeft size={16} />{" "}
-                      <span className="hidden md:inline">Previous Step</span>{" "}
+                      <ArrowLeft size={16} />
+                      <span className="hidden md:inline">Previous Step</span>
                       <span className="md:hidden">Back</span>
                     </button>
                     <div className="md:hidden flex gap-1">
@@ -569,8 +579,8 @@ export default function AdminAdmissionForm({
                         onClick={() => validateStep(step) && setStep(step + 1)}
                         className="flex-1 md:flex-none bg-[#19125e] text-white py-4 px-8 md:rounded-2xl rounded-xl font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-3 shadow-xl active:scale-95 cursor-pointer hover:bg-[#19125e]/90 transition-all"
                       >
-                        <span className="hidden md:inline">Next Step</span>{" "}
-                        <span className="md:hidden">Next</span>{" "}
+                        <span className="hidden md:inline">Next Step</span>
+                        <span className="md:hidden">Next</span>
                         <ArrowRight size={14} className="text-[#f0c44c]" />
                       </button>
                     ) : (

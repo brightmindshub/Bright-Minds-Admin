@@ -213,7 +213,7 @@ export default function StudentDashboard({ url }: Props) {
       doc.line(140, 250, 190, 250);
       doc.setFontSize(9);
       doc.setFont("helvetica", "bold");
-      doc.text("Registrar Signature", 165, 256, { align: "center" });
+      doc.text("Signature", 165, 256, { align: "center" });
 
       doc.setFillColor(brandColor[0], brandColor[1], brandColor[2]);
       doc.rect(0, 280, 210, 17, "F");
