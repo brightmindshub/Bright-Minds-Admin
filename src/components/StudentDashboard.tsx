@@ -18,6 +18,7 @@ import {
   ChevronLeft,
   ChevronRight,
   FileDown,
+  Mail,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import jsPDF from "jspdf";
@@ -28,6 +29,7 @@ interface Student {
   name: string;
   course: string;
   phone: string;
+  email: string;
   guardian?: string;
   address?: string;
   qualification?: string;
@@ -343,8 +345,8 @@ export default function StudentDashboard({ url }: Props) {
               <tr className="bg-gray-50/50">
                 {[
                   { label: "Date", icon: CalendarIcon },
-                  { label: "Identity", icon: UserIcon },
-                  { label: "Enrollment", icon: GraduationCap },
+                  { label: "Name", icon: UserIcon },
+                  { label: "Course", icon: GraduationCap },
                   { label: "Contact", icon: Phone, hideMobile: true },
                   { label: "Action", icon: Eye },
                 ].map((h, i) => (
@@ -513,6 +515,11 @@ export default function StudentDashboard({ url }: Props) {
                     icon={Phone}
                     label="Contact"
                     value={selectedStudent.phone}
+                  />
+                  <DetailItem
+                    icon={Mail}
+                    label="Email Id"
+                    value={selectedStudent.email}
                   />
                   <DetailItem
                     icon={MapPin}
