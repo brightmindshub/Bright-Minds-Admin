@@ -97,7 +97,7 @@ export default function LoginPage() {
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20" />
         <div className="absolute top-20 left-20">
           <Image
-            src="/brightMindsAcademy-logo.jpeg"
+            src="/BrightMindsAcademyLogo.png"
             width={220}
             height={80}
             alt="logo"

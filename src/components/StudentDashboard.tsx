@@ -88,7 +88,7 @@ export default function StudentDashboard({ url }: Props) {
       let logoBase64 = "";
       try {
         logoBase64 = await getBase64ImageFromURL(
-          "/brightMindsAcademy-logo.jpeg",
+          "/BrightMindsAcademyLogo.png",
         );
         doc.addImage(logoBase64, "JPEG", 75, 12, 60, 20);
       } catch (e) {

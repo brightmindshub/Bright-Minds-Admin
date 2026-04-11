@@ -216,7 +216,7 @@ export default function AdminAdmissionForm({
       <aside className="hidden md:flex w-20 lg:w-72 bg-[#19125e] flex-col justify-between py-10 px-6 border-r border-white/5 relative z-50">
         <div className="w-full text-center">
           <Image
-            src="/brightMindsAcademy-logo.jpeg"
+            src="/BrightMindsAcademyLogo.png"
             width={180}
             height={60}
             alt="logo"
